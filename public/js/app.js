@@ -49,13 +49,21 @@ class TimersDashboard extends React.Component {
     });
   };
 
+  deleteTimer = (timerId) => {
+    console.log('reached the top and going to delete this timer ', timerId)
+    this.setState(prevState => ({
+      timers: prevState.timers.filter(currentTimer => currentTimer.id !== timerId)
+    }))
+  }
+
   render() {
     return (
       <div className='ui three column centered grid'>
         <div className='column'>
           <EditableTimerList
             timers={this.state.timers}
-            handleEditFormSubmit={this.handleEditFormSubmit}
+            onFormSubmit={this.handleEditFormSubmit}
+            handleDeleteTimer={this.deleteTimer}
           />
           <ToggleableTimerForm
             onFormSubmit={this.handleCreateFormSubmit}
@@ -78,6 +86,7 @@ class EditableTimerList extends React.Component {
         elapsed={timer.elapsed}
         runningSince={timer.runningSince}
         onFormSubmit={this.props.onFormSubmit}
+        handleDeleteTimer={this.props.handleDeleteTimer}
       />
     ));
     return (
@@ -111,6 +120,10 @@ class EditableTimer extends React.Component {
     this.closeForm()
   }
 
+  handleDeleteTimer = (timerId) => {
+    this.props.handleDeleteTimer(timerId)
+  }
+
   closeForm = () => {
     this.setState({ editFormOpen: false })
   }
@@ -135,6 +148,7 @@ class EditableTimer extends React.Component {
           elapsed={this.props.elapsed}
           runningSince={this.props.runningSince}
           handleEditClick={this.handleEditClick}
+          handleDeleteTimer={this.handleDeleteTimer}
         />
       );
     }
@@ -163,7 +177,7 @@ class Timer extends React.Component {
             <span className='right floated edit icon' onClick={this.props.handleEditClick}>
               <i className='edit icon' />
             </span>
-            <span className='right floated trash icon'>
+            <span className='right floated trash icon' onClick={() => this.props.handleDeleteTimer(this.props.id)}>
               <i className='trash icon' />
             </span>
           </div>
