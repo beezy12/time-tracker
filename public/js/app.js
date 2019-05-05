@@ -23,6 +23,10 @@ class TimersDashboard extends React.Component {
     this.createTimer(timer);
   };
 
+  handleDeleteTimer = (timer) => {
+    this.deleteTimer(timer)
+  }
+
   handleEditFormSubmit = (attrs) => {
     this.updateTimer(attrs)
   }
@@ -63,7 +67,7 @@ class TimersDashboard extends React.Component {
           <EditableTimerList
             timers={this.state.timers}
             onFormSubmit={this.handleEditFormSubmit}
-            handleDeleteTimer={this.deleteTimer}
+            handleDeleteTimer={this.handleDeleteTimer}
           />
           <ToggleableTimerForm
             onFormSubmit={this.handleCreateFormSubmit}
@@ -148,7 +152,7 @@ class EditableTimer extends React.Component {
           elapsed={this.props.elapsed}
           runningSince={this.props.runningSince}
           handleEditClick={this.handleEditClick}
-          handleDeleteTimer={this.handleDeleteTimer}
+          onTrashClick={this.handleDeleteTimer}
         />
       );
     }
@@ -157,6 +161,10 @@ class EditableTimer extends React.Component {
 
 
 class Timer extends React.Component {
+  handleTrashClick = () => {
+    this.props.onTrashClick(this.props.id);
+  }
+
   render() {
     const elapsedString = helpers.renderElapsedString(this.props.elapsed);
     return (
@@ -177,7 +185,7 @@ class Timer extends React.Component {
             <span className='right floated edit icon' onClick={this.props.handleEditClick}>
               <i className='edit icon' />
             </span>
-            <span className='right floated trash icon' onClick={() => this.props.handleDeleteTimer(this.props.id)}>
+            <span className='right floated trash icon' onClick={this.handleTrashClick}>
               <i className='trash icon' />
             </span>
           </div>
